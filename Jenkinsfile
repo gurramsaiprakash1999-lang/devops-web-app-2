@@ -40,8 +40,8 @@ pipeline {
                     echo "--- Scaling Deployment to 2 Replicas ---"
                     kubectl scale deployment/cloudtech-deployment --replicas=2
                     
-                    echo "--- Performing Rolling Update Restart ---"
-                    kubectl rollout restart deployment/cloudtech-deployment
+                    echo "--- Re-creating Pods with Fresh Image ---"
+                    kubectl delete pods --all
                     kubectl rollout status deployment/cloudtech-deployment --timeout=90s
                 '''
             }
@@ -52,6 +52,7 @@ pipeline {
                     export PATH=$PATH:/usr/local/bin
                     export MINIKUBE_HOME=/home/ubuntu
                     export KUBECONFIG=/var/lib/jenkins/.kube/config
+                    export JENKINS_NODE_COOKIE=dontKillMe
                     
                     echo "--- Inspecting Active Pods and Services ---"
                     kubectl get pods -o wide
@@ -61,6 +62,7 @@ pipeline {
                     pkill -f "port-forward" || true
                     nohup kubectl port-forward --address 0.0.0.0 service/cloudtech-service 5000:5000 > /dev/null 2>&1 &
                     nohup kubectl port-forward --address 0.0.0.0 service/cloudtech-service 30300:5000 > /dev/null 2>&1 &
+                    sleep 3
                 '''
             }
         }
