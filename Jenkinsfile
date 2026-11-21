@@ -20,6 +20,9 @@ pipeline {
                 sh '''
                     echo "--- Loading Image to Kubernetes Cluster ---"
                     export PATH=$PATH:/usr/local/bin
+                    export MINIKUBE_HOME=/home/ubuntu
+                    export KUBECONFIG=/var/lib/jenkins/.kube/config
+                    minikube status || minikube start --driver=docker --force
                     minikube image load cloudtech-app:latest --overwrite
                 '''
             }
@@ -27,8 +30,9 @@ pipeline {
         stage('4. Deploy & Scale Kubernetes') {
             steps {
                 sh '''
-                    export KUBECONFIG=/var/lib/jenkins/.kube/config
                     export PATH=$PATH:/usr/local/bin
+                    export MINIKUBE_HOME=/home/ubuntu
+                    export KUBECONFIG=/var/lib/jenkins/.kube/config
                     
                     echo "--- Applying K8s Manifests ---"
                     kubectl apply -f k8s-deployment.yaml
@@ -45,8 +49,9 @@ pipeline {
         stage('5. Kubernetes Inspection & Port-Forwarding') {
             steps {
                 sh '''
-                    export KUBECONFIG=/var/lib/jenkins/.kube/config
                     export PATH=$PATH:/usr/local/bin
+                    export MINIKUBE_HOME=/home/ubuntu
+                    export KUBECONFIG=/var/lib/jenkins/.kube/config
                     
                     echo "--- Inspecting Active Pods and Services ---"
                     kubectl get pods -o wide
