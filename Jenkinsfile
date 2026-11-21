@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('1. Clone Source Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/gurramsaiprakash1999-lang/cloud-tech-app.git'
+                git branch: 'main', url: 'https://github.com/gurramsaiprakash1999-lang/devops-web-app-2.git'
             }
         }
         stage('2. Docker Build & Prune') {
@@ -70,7 +70,7 @@ pipeline {
                       curl -s -X POST \
                         -H "Authorization: Bearer $GITHUB_TOKEN" \
                         -H "Accept: application/vnd.github.v3+json" \
-                        https://api.github.com/repos/gurramsaiprakash1999-lang/cloud-tech-app/statuses/$COMMIT_HASH \
+                        https://api.github.com/repos/gurramsaiprakash1999-lang/devops-web-app-2/statuses/$COMMIT_HASH \
                         -d "{\\"state\\": \\"success\\", \\"target_url\\": \\"http://44.200.158.91:8080\\", \\"description\\": \\"Cloud Tech App Deployed Successfully\\", \\"context\\": \\"$CONTEXT\\"}"
                     done
                 '''
